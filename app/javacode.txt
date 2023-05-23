@@ -1,0 +1,266 @@
+package com.example.myapplication;
+
+import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageButton;
+import java.io.IOException;
+import java.util.Set;
+import java.util.UUID;
+
+@SuppressWarnings("ALL")
+public class MainActivity extends AppCompatActivity {
+    private static final int REQUEST_ENABLE_BT = 1;
+
+    BluetoothAdapter BA;
+    Set<BluetoothDevice> BTPairedDevices;
+    BluetoothSocket BTSocket;
+    BluetoothDevice HC;
+
+    boolean isConnected = false;
+
+    ImageButton buttonForward;
+    ImageButton buttonBackward;
+    ImageButton buttonLeft;
+    ImageButton buttonRight;
+    ImageButton buttonSignal;
+    ImageButton buttonShoot;
+    ImageButton buttonConnect;
+
+    static final int FORWARD_PRESSED = 1;
+    static final int BACKWARD_PRESSED = 2;
+    static final int LEFT_PRESSED = 3;
+    static final int RIGHT_PRESSED = 4;
+    static final int SIGNAL_PRESSED = 5;
+    static final int SHOOT_PRESSED = 6;
+
+    static final int FORWARD_RELEASED = -1;
+    static final int BACKWARD_RELEASED = -2;
+    static final int LEFT_RELEASED = -3;
+    static final int RIGHT_RELEASED = -4;
+    static final int SIGNAL_RELEASED = -5;
+    static final int SHOOT_RELEASED = -6;
+
+    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); //00001101-0000-1000-8000-00805F9B34FB
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.BLUETOOTH)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN},
+                    REQUEST_ENABLE_BT);
+        }
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.BLUETOOTH_ADMIN)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.BLUETOOTH_ADMIN, Manifest.permission.BLUETOOTH_ADMIN},
+                    REQUEST_ENABLE_BT);
+        }
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.BLUETOOTH_CONNECT)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_ADMIN},
+                        REQUEST_ENABLE_BT);
+            }
+        }
+
+        buttonConnect = findViewById(R.id.buttonConnect);
+
+        buttonConnect.setOnClickListener(view -> {
+
+            BA = BluetoothAdapter.getDefaultAdapter();
+
+            if (BA == null) {
+                return;
+            } else if (!BA.isEnabled()) {
+                return;
+            }
+
+            BTPairedDevices = BA.getBondedDevices();
+
+            for (BluetoothDevice BTDev : BTPairedDevices) {
+                if ("HC-06".equals(BTDev.getName())
+                        && BTDev.getAddress().equals("98:DA:60:05:CB:6C")) {
+                    HC = BTDev;
+                    try {
+                        BTSocket = HC.createRfcommSocketToServiceRecord(MY_UUID);
+                        cBluetoothConnect BTConnect = new cBluetoothConnect();
+                        BTConnect.start();
+                        buttonConnect.setBackgroundColor(Color.GREEN);
+                    } catch (IOException e) {
+                        return;
+                    } finally {
+                        isConnected = true;
+                    }
+                    break;
+                }
+            }
+        });
+
+        buttonForward = findViewById(R.id.buttonForward);
+        //buttonForward.setBackgroundColor(Color.GREEN);
+        buttonForward.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    System.out.println("pressed");
+                    buttonForward.isEnabled();
+                    write(FORWARD_PRESSED);
+                }
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    System.out.println("released");
+                    write(FORWARD_RELEASED);
+                }
+
+                return false;
+            }
+        });
+
+        buttonBackward = findViewById(R.id.buttonBackward);
+        //buttonBackward.setBackgroundColor(Color.BLUE);
+        buttonBackward.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    System.out.println("pressed");
+                    write(BACKWARD_PRESSED);
+                }
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    System.out.println("released");
+                    write(BACKWARD_RELEASED);
+                }
+
+                return false;
+            }
+        });
+
+        buttonLeft = findViewById(R.id.buttonLeft);
+        //buttonLeft.setBackgroundColor(Color.MAGENTA);
+        buttonLeft.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    System.out.println("pressed");
+                    write(LEFT_PRESSED);
+                }
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    System.out.println("released");
+                    write(LEFT_RELEASED);
+                }
+
+                return false;
+            }
+        });
+
+        buttonRight = findViewById(R.id.buttonRight);
+        //buttonRight.setBackgroundColor(Color.YELLOW);
+        buttonRight.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    System.out.println("pressed");
+                    write(RIGHT_PRESSED);
+                }
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    System.out.println("released");
+                    write(RIGHT_RELEASED);
+                }
+
+                return false;
+            }
+        });
+
+        buttonSignal = findViewById(R.id.buttonSignal);
+        buttonSignal.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    System.out.println("pressed");
+                    write(SIGNAL_PRESSED);
+                }
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    System.out.println("released");
+                    write(SIGNAL_RELEASED);
+                }
+
+                return false;
+            }
+        });
+
+        buttonShoot = findViewById(R.id.buttonShoot);
+        buttonShoot.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    System.out.println("pressed");
+                    write(SHOOT_PRESSED);
+                }
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    System.out.println("released");
+                    write(SHOOT_RELEASED);
+                }
+
+                return false;
+            }
+        });
+
+
+    }
+
+
+    public void write(int option) {
+
+        if (BTSocket == null) return;
+
+        try {
+            if (BTSocket.isConnected())
+                BTSocket.getOutputStream().write(option);
+        } catch (IOException io) {
+            return;
+        }
+
+    }
+
+    public class cBluetoothConnect extends Thread {
+        public void run() {
+            try {
+                BTSocket.connect();
+            }
+            catch (IOException e) {
+                return;
+            }
+        }
+    }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+}

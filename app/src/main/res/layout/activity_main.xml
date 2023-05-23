@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="#FFFFFF"
+    tools:context=".MainActivity">
+
+    <ImageButton
+        android:id="@+id/buttonRight"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:background="@drawable/shape_button"
+        android:backgroundTint="#00575757"
+        android:rotation="0"
+        android:scaleType="fitStart"
+        android:tint="@color/button_right_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.155"
+        app:layout_constraintStart_toEndOf="@+id/buttonLeft"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.679"
+        app:srcCompat="@drawable/arrowhead" />
+
+    <ImageButton
+        android:id="@+id/buttonLeft"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:adjustViewBounds="false"
+        android:background="@drawable/shape_button"
+        android:backgroundTint="#00575757"
+        android:rotation="180"
+        android:scaleType="fitStart"
+        android:tint="@color/button_left_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.602"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.674"
+        app:srcCompat="@drawable/arrowhead" />
+
+    <ImageButton
+        android:id="@+id/buttonForward"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:background="@drawable/shape_button"
+        android:backgroundTint="#004E4E4E"
+        android:rotation="-90"
+        android:scaleType="centerInside"
+        android:tint="@color/button_forward_color"
+        app:layout_constraintBottom_toTopOf="@+id/buttonBackward"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.112"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.73"
+        app:srcCompat="@drawable/arrowhead"
+        />
+
+    <ImageButton
+        android:id="@+id/buttonBackward"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:background="@drawable/shape_button"
+        android:backgroundTint="#00575757"
+        android:rotation="90"
+        android:scaleType="fitStart"
+        android:tint="@color/button_backward_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.113"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.85"
+        app:srcCompat="@drawable/arrowhead" />
+
+    <ImageButton
+        android:id="@+id/buttonSignal"
+        android:layout_width="130dp"
+        android:layout_height="60dp"
+        android:background="@drawable/shape_button"
+        android:backgroundTint="@color/button_signal_color"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@+id/buttonLeft"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.39"
+        app:layout_constraintStart_toEndOf="@+id/buttonForward"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.662"
+        app:srcCompat="@android:drawable/ic_lock_silent_mode_off" />
+
+    <ImageButton
+        android:id="@+id/buttonShoot"
+        android:layout_width="130dp"
+        android:layout_height="60dp"
+        android:background="@drawable/shape_button"
+        android:backgroundTint="@color/button_shoot_color"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toTopOf="@+id/buttonRight"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.155"
+        app:layout_constraintStart_toEndOf="@+id/buttonSignal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.654"
+        app:srcCompat="@drawable/bang" />
+
+    <ImageButton
+        android:id="@+id/buttonConnect"
+        android:layout_width="47dp"
+        android:layout_height="44dp"
+        android:layout_marginBottom="4dp"
+        android:scaleType="fitCenter"
+        android:tint="#14BBCA"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.992"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/connect"
+        />
+
+
+</android.support.constraint.ConstraintLayout>
